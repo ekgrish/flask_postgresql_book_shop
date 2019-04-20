@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление нового журнала</title>
+</head>
+<body>
+     <form method="post" action="/magazine">
+         <label>Название журнала:</label>
+         <input id="title" name="title" type="text"/>
+         <label>Год публикации:</label>
+         <input id="publishing_year" name="publishing_year" type="text"/>
+         <label>Количество на складе:</label>
+         <input id="quantity_in_stock" name="quantity_in_stock" type="text"/>
+         <label>Аннотация:</label>
+         <input id="description" name="description" type="text"/>
+         <button id="catalog" name="catalog">Перейти в каталог</button>
+         <input id="new_magazine" value="Новый журнал" type="submit"/>
+         <button id="new_book" name="new_book">Новая книга</button>
+     </form>
+</body>
+</html>
