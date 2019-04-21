@@ -6,7 +6,14 @@ from app import db
 
 @app.route('/')
 def index():
-    return render_template('post_new_magazine.html')
+    render_template('routs.html')
+
+    return redirect(url_for('new_magazine'))
+
+
+@app.route('/new_magazine')
+def new_magazine():
+    return render_template('new_magazine.html')
 
 
 # fork for new and for existed with id
@@ -14,7 +21,7 @@ def index():
 def magazine_actions():
     publising_house_name = request.form['publishing_house']
     publising_house = PublishingHouse.query.filter_by(name=publising_house_name).first()
-    if publising_house == None:
+    if publising_house is None:
         publising_house = PublishingHouse(publising_house_name)
         db.session.add(publising_house)
         db.session.commit()
