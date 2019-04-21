@@ -19,20 +19,11 @@ def new_magazine():
 # fork for new and for existed with id
 @app.route('/magazine', methods=['POST'])
 def magazine_actions():
-    publising_house_name = request.form['publishing_house']
-    publising_house = PublishingHouse.query.filter_by(name=publising_house_name).first()
-    if publising_house is None:
-        publising_house = PublishingHouse(publising_house_name)
-        db.session.add(publising_house)
-        db.session.commit()
-        publising_house_id = PublishingHouse.query.filter_by(name=publising_house_name).first().id
-    else:
-        publising_house_id = publising_house.id
-    magazine = Magazine(request.form['title'],
-                        request.form['publishing_year'],
-                        request.form['quantity_in_stock'],
-                        request.form['description'],
-                        publising_house_id)
-    db.session.add(magazine)
-    db.session.commit()
+    magazine_dict = {}
+    magazine_dict['publising_house_name'] = request.form['publishing_house']
+    magazine_dict['title'] = request.form['title']
+    magazine_dict['publishing_year'] = request.form['publishing_year']
+    magazine_dict['quantity_in_stock'] = request.form['quantity_in_stock']
+    magazine_dict['description'] = request.form['description']
+
     return redirect(url_for('index'))

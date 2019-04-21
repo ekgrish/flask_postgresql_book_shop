@@ -73,16 +73,12 @@ class Book(db.Model):
 class Author(db.Model):
     __tablename__ = 'author'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    surname = db.Column(db.String(80))
-    middle_name = db.Column(db.String(80))
+    name = db.Column(db.String(200))
 
     # TODO: make using dict
-    def __init__(self, name, surname, middle_name):
+    def __init__(self, name):
         self.name = name
-        self.surname = surname
-        self.middle_name = middle_name
 
     # TODO: remove, just artefact from lesson or rewrite
     def __repr__(self):
-        return '<Author %r>' % self.name + ' ' + self.surname + ' ' + self.middle_nam
+        return '<Author %r>' % self.name
