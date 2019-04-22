@@ -18,13 +18,14 @@ class SaveDataHelper:
                     book_dict['quantity_in_stock'],
                     book_dict['description'],
                     publising_house_id)
-        autors = Author.query.filter_by(name=book_dict['author']).all()
-        if autors is None:
-            autors = Author(book_dict['author'])
-            db.session.add(autors)
+        authors = Author.query.filter_by(name=book_dict['author']).all()
+        if authors is None:
+            author = Author(book_dict['author'])
+            db.session.add(author)
             db.session.commit()
-        #book.book_authors.extend(autors)
-        book.book_authors.append(autors)
+            book.authors.append(author)
+        else:
+            book.authors.extend(authors)
         db.session.add(book)
         db.session.commit()
 

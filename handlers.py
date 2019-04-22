@@ -25,5 +25,4 @@ def magazine_actions():
     magazine_dict['publishing_year'] = request.form['publishing_year']
     magazine_dict['quantity_in_stock'] = request.form['quantity_in_stock']
     magazine_dict['description'] = request.form['description']
-
     return redirect(url_for('index'))

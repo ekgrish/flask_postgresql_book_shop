@@ -1,3 +1,4 @@
+from sqlalchemy.orm import relationship
 from app import db
 
 
@@ -23,7 +24,6 @@ class Magazine(db.Model):
     quantity_in_stock = db.Column(db.Integer)
     description = db.Column(db.String(400))
     publishing_house_id = db.Column(db.Integer, db.ForeignKey('publishing_house.id'), nullable=False)
-    publishing_house = db.relationship('PublishingHouse', backref=db.backref('magazines', lazy=True))
 
     # TODO: make using dict
     def __init__(self, title, publishing_year, quantity_in_stock, description, publishing_house_id):
@@ -38,6 +38,12 @@ class Magazine(db.Model):
         return '<Magazine %r>' % self.title
 
 
+book_author_association = db.Table('book_author_association', db.Model.metadata,
+                                   db.Column('author_id', db.Integer, db.ForeignKey('author.id')),
+                                   db.Column('book_id', db.Integer, db.ForeignKey('book.id'))
+                                   )
+
+
 class Book(db.Model):
     __tablename__ = 'book'
     id = db.Column(db.Integer, primary_key=True)
@@ -45,9 +51,9 @@ class Book(db.Model):
     publishing_year = db.Column(db.Integer, nullable=False)
     quantity_in_stock = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String(400))
-    book_authors = db.relationship('BookAuthor', cascade="all, delete-orphan", backref="book")
+    authors = relationship('Author', secondary=book_author_association, back_populates="books")
     publishing_house_id = db.Column(db.Integer, db.ForeignKey('publishing_house.id'), nullable=False)
-    publishing_house = db.relationship('PublishingHouse', backref=db.backref('books', lazy=True))
+
 
     # TODO: make using dict
     def __init__(self, title, publishing_year, quantity_in_stock, description, publishing_house_id):
@@ -66,6 +72,10 @@ class Author(db.Model):
     __tablename__ = 'author'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
+    books = relationship(
+        "Book",
+        secondary=book_author_association,
+        back_populates="authors")
 
     # TODO: make using dict
     def __init__(self, name):
@@ -74,15 +84,3 @@ class Author(db.Model):
     # TODO: remove, just artefact from lesson or rewrite
     def __repr__(self):
         return '<Author %r>' % self.name
-
-
-class BookAuthor(db.Model):
-    __tablename__ = "book_author"
-    book_id = db.Column(db.Integer, db.ForeignKey("book.id"), primary_key=True)
-    author_id = db.Column(db.Integer, db.ForeignKey("author.id"), primary_key=True)
-
-    def __init__(self, item, price=None):
-        self.item = item
-        self.price = price or item.price
-
-    author = db.relationship(Author, lazy="joined")
