@@ -2,6 +2,7 @@ from models import *
 from flask import request, redirect, render_template, url_for
 from app import app
 from app import db
+import json
 
 
 @app.route('/')
@@ -26,3 +27,15 @@ def magazine_actions():
     magazine_dict['quantity_in_stock'] = request.form['quantity_in_stock']
     magazine_dict['description'] = request.form['description']
     return redirect(url_for('index'))
+
+#TODO: error handler
+@app.route('/book/<int:id>', methods=['GET'])
+def show_book(id):
+    book = Book.query.filter_by(id=id).first().to_json()
+    return json.dumps(book)
+
+#TODO: error handler
+@app.route('/magazine/<int:id>', methods=['GET'])
+def show_magazine(id):
+    magazine = Magazine.query.filter_by(id=id).first().to_json()
+    return json.dumps(magazine)

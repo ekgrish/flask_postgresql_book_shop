@@ -33,6 +33,16 @@ class Magazine(db.Model):
         self.description = description
         self.publishing_house_id = publishing_house_id
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "publishing_year":  self.publishing_year,
+            "quantity_in_stock": self.quantity_in_stock,
+            "description": self.description,
+            "publishing_house": PublishingHouse.query.filter_by(id=self.publishing_house_id).first().name
+        }
+
     # TODO: remove, just artefact from lesson or rewrite
     def __repr__(self):
         return '<Magazine %r>' % self.title
@@ -66,6 +76,17 @@ class Book(db.Model):
     # TODO: remove, just artefact from lesson or rewrite
     def __repr__(self):
         return '<Magazine %r>' % self.title
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "publishing_year":  self.publishing_year,
+            "quantity_in_stock": self.quantity_in_stock,
+            "description": self.description,
+            "publishing_house": PublishingHouse.query.filter_by(id=self.publishing_house_id).first().name,
+            "authors": [author.name for author in Author.query.filter(Author.books.any(Book.id == self.id)).all()]
+        }
 
 
 class Author(db.Model):
