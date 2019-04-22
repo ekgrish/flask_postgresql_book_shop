@@ -1,0 +1,89 @@
+{
+  "publishing_houses": [
+    {
+      "name": "Издательство Издевательство"
+    },
+    {
+      "name": "Второе Издательство"
+    },
+    {
+      "name": "Издательство"
+    }
+  ],
+  "authors": [
+    {
+      "name": "Жан-Поль Сартр"
+    },
+    {
+      "name": "Альбер Камю"
+    },
+    {
+      "name": "Виктор Олегович Пелевин"
+    }
+  ],
+  "books": [
+    {
+      "title": "Generation П",
+      "publishing_year": 2014,
+      "quantity_in_stock": 7,
+      "description": "Хорошеечно",
+      "publishing_house_name": "Издательство Издевательство",
+      "author": "Виктор Олегович Пелевин"
+    },
+    {
+      "title": "Чапаев и Пустота",
+      "publishing_year": 2014,
+      "quantity_in_stock": 7,
+      "description": "Норм так ниче",
+      "publishing_house_name": "Издательство Издевательство",
+      "author": "Виктор Олегович Пелевин"
+    },
+    {
+      "title": "Тошнота",
+      "publishing_year": 1996,
+      "quantity_in_stock": 1,
+      "description": "Хорошеечно",
+      "publishing_house_name": "Издательство Издевательство",
+      "author": "Жан-Поль Сартр"
+    },
+    {
+      "title": "Посторонний",
+      "publishing_year": 2014,
+      "quantity_in_stock": 10,
+      "description": "не нать",
+      "publishing_house_name": "Издательство",
+      "author": "Альбер Камю"
+    },
+    {
+      "title": "Чума",
+      "publishing_year": 1996,
+      "quantity_in_stock": 1,
+      "description": "не нать",
+      "publishing_house_name": "Второе Издательство",
+      "author": "Альбер Камю"
+    }
+  ],
+  "magazines": [
+    {
+      "title": "Журнал",
+      "publishing_year": 2014,
+      "quantity_in_stock": 6,
+      "description": "без оного",
+      "publishing_house_name": "Издательство Издевательство"
+    },
+    {
+      "title": "Журнал о красивом",
+      "publishing_year": 1996,
+      "quantity_in_stock": 1,
+      "description": "очень красивом",
+      "publishing_house_name": "Второе Издательство"
+    },
+    {
+      "title": "Просто журнал",
+      "publishing_year": 2014,
+      "quantity_in_stock": 3,
+      "description": "очень просто",
+      "publishing_house_name": "Издательство"
+    }
+  ]
+}
