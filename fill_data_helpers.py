@@ -3,47 +3,40 @@ from app import db
 
 
 class SaveDataHelper:
-    def new_book(book_dict):
-        publising_house = PublishingHouse.query.filter_by(name=book_dict['publishing_house_name']).first()
+    def new_product(product_dict):
+        publising_house = PublishingHouse.query.filter_by(name=product_dict['publishing_house_name']).first()
         if publising_house is None:
-            publising_house = PublishingHouse(book_dict['publishing_house_name'])
-            db.session.add(publising_house)
-            db.session.commit()
-            publising_house_id = PublishingHouse.query.filter_by(name=book_dict['publishing_house_name']).first().id
+            publising_house = PublishingHouse(product_dict['publishing_house_name'])
+            publising_house.save_data()
+            publising_house_id = PublishingHouse.query.filter_by(name=product_dict['publishing_house_name']).first().id
         else:
             publising_house_id = publising_house.id
 
-        book = Book(book_dict['title'],
-                    book_dict['publishing_year'],
-                    book_dict['quantity_in_stock'],
-                    book_dict['description'],
-                    publising_house_id)
-        authors = Author.query.filter_by(name=book_dict['author']).all()
-        if authors is None:
-            author = Author(book_dict['author'])
-            db.session.add(author)
-            db.session.commit()
-            book.authors.append(author)
+        product_type = Type.query.filter_by(product_type=product_dict['type']).first()
+        if product_type is None:
+            product_type = Type(product_dict['type'])
+            product_type.save_data()
+            product_type_id = Type.query.filter_by(product_type=product_dict['type']).first().id
         else:
-            book.authors.extend(authors)
-        db.session.add(book)
-        db.session.commit()
+            product_type_id = product_type.id
 
-    def new_magazine(magazine_dict):
-        publising_house = PublishingHouse.query.filter_by(name=magazine_dict['publishing_house_name']).first()
-        if publising_house is None:
-            publising_house = PublishingHouse(magazine_dict['publishing_house_name'])
-            db.session.add(publising_house)
-            db.session.commit()
-            publising_house_id = PublishingHouse.query.filter_by(name=magazine_dict['publishing_house_name']).first().id
-        else:
-            publising_house_id = publising_house.id
-        magazine = Magazine(magazine_dict['title'],
-                            magazine_dict['publishing_year'],
-                            magazine_dict['quantity_in_stock'],
-                            magazine_dict['description'],
-                            publising_house_id)
-        db.session.add(magazine)
+        product = Product(product_dict['title'],
+                          product_dict['publishing_year'],
+                          product_dict['quantity_in_stock'],
+                          product_dict['description'],
+                          publising_house_id,
+                          product_type_id)
+        if product_type.product_type == "книга":
+            for author_name in product_dict['authors']:
+                author = Author.query.filter_by(name=author_name).first()
+                if author is None:
+                    author = Author(author_name)
+                    db.session.add(author)
+                    db.session.commit()
+                    product.authors.append(author)
+                else:
+                    product.authors.append(author)
+        db.session.add(product)
         db.session.commit()
 
     def new_author(author_dict):
@@ -56,3 +49,7 @@ class SaveDataHelper:
         db.session.add(publising_house)
         db.session.commit()
 
+    def new_type(type_dict):
+        product_type = Type(type_dict['name'])
+        db.session.add(product_type)
+        db.session.commit()
