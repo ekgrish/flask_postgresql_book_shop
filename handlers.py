@@ -29,13 +29,8 @@ def magazine_actions():
     return redirect(url_for('index'))
 
 #TODO: error handler
-@app.route('/book/<int:id>', methods=['GET'])
-def show_book(id):
-    book = Book.query.filter_by(id=id).first().to_json()
-    return json.dumps(book)
+@app.route('/product/<int:id>', methods=['GET'])
+def show_product(id):
+    product = Product.query.filter_by(id=id).first().to_json()
+    return json.dumps(product)
 
-#TODO: error handler
-@app.route('/magazine/<int:id>', methods=['GET'])
-def show_magazine(id):
-    magazine = Magazine.query.filter_by(id=id).first().to_json()
-    return json.dumps(magazine)

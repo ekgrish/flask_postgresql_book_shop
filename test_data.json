@@ -21,50 +21,74 @@
       "name": "Виктор Олегович Пелевин"
     }
   ],
-  "books": [
+  "types": [
     {
+      "name": "книга"
+    },
+    {
+      "name": "журнал"
+    }
+  ],
+  "products": [
+    {
+      "type": "книга",
       "title": "Generation П",
       "publishing_year": 2014,
       "quantity_in_stock": 7,
       "description": "Хорошеечно",
       "publishing_house_name": "Издательство Издевательство",
-      "author": "Виктор Олегович Пелевин"
+      "authors": [
+        "Виктор Олегович Пелевин"
+      ]
     },
     {
+      "type": "книга",
       "title": "Чапаев и Пустота",
       "publishing_year": 2014,
       "quantity_in_stock": 7,
       "description": "Норм так ниче",
       "publishing_house_name": "Издательство Издевательство",
-      "author": "Виктор Олегович Пелевин"
+      "authors": [
+        "Виктор Олегович Пелевин"
+      ]
     },
     {
+      "type": "книга",
       "title": "Тошнота",
       "publishing_year": 1996,
       "quantity_in_stock": 1,
       "description": "Хорошеечно",
       "publishing_house_name": "Издательство Издевательство",
-      "author": "Жан-Поль Сартр"
+      "authors": [
+        "Жан-Поль Сартр",
+        "Несуществующий"
+      ]
     },
     {
+      "type": "книга",
       "title": "Посторонний",
       "publishing_year": 2014,
       "quantity_in_stock": 10,
       "description": "не нать",
       "publishing_house_name": "Издательство",
-      "author": "Альбер Камю"
+      "authors": [
+        "Альбер Камю"
+      ]
     },
     {
+      "type": "книга",
       "title": "Чума",
       "publishing_year": 1996,
       "quantity_in_stock": 1,
       "description": "не нать",
       "publishing_house_name": "Второе Издательство",
-      "author": "Альбер Камю"
-    }
-  ],
-  "magazines": [
+      "authors": [
+        "Альбер Камю",
+        "Несуществующий"
+      ]
+    },
     {
+      "type": "журнал",
       "title": "Журнал",
       "publishing_year": 2014,
       "quantity_in_stock": 6,
@@ -72,6 +96,7 @@
       "publishing_house_name": "Издательство Издевательство"
     },
     {
+      "type": "журнал",
       "title": "Журнал о красивом",
       "publishing_year": 1996,
       "quantity_in_stock": 1,
@@ -79,6 +104,7 @@
       "publishing_house_name": "Второе Издательство"
     },
     {
+      "type": "журнал",
       "title": "Просто журнал",
       "publishing_year": 2014,
       "quantity_in_stock": 3,

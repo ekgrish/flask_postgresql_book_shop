@@ -2,91 +2,112 @@ from sqlalchemy.orm import relationship
 from app import db
 
 
+class Type(db.Model):
+    __tablename__ = 'type'
+    id = db.Column(db.Integer, primary_key=True)
+    product_type = db.Column(db.String(10), nullable=False)
+
+    def __init__(self, product_type):
+        self.product_type = product_type
+
+    def to_json(self):
+        return {"id": self.id,
+                "type": self.type}
+
+    # TODO: think, is that correct?
+    def save_data(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            return {"error": "{}".format(e)}
+        else:
+            product_type = Type.query.filter_by(product_type=self.product_type).first()
+            return product_type.to_json(self)
+
+    def __repr__(self):
+        return '<Type %r>' % self.product_type
+
+
 class PublishingHouse(db.Model):
     __tablename__ = 'publishing_house'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120))
+    name = db.Column(db.String(120), nullable=False)
 
     def __init__(self, name):
         self.name = name
 
-    # TODO: remove, just artefact from lesson or rewrite
+    def to_json(self):
+        return {"id": self.id,
+                "name": self.name}
+
+    # TODO: think, is that correct?
+    def save_data(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            return {"error": "{}".format(e)}
+        else:
+            publishing_house = PublishingHouse.query.filter_by(name=self.name).first()
+            return publishing_house.to_json(self)
+
     def __repr__(self):
         return '<PublishingHouse %r>' % self.name
 
-
-# TODO: make book inherited from magazine?
-class Magazine(db.Model):
-    __tablename__ = 'magazine'
+book_author_association = db.Table('book_author_association', db.Model.metadata,
+                                   db.Column('author_id', db.Integer, db.ForeignKey('author.id')),
+                                   db.Column('book_id', db.Integer, db.ForeignKey('product.id'))
+                                   )
+# TODO: make book and magazine inherited from maybe
+# one Table, but with two "handlers"
+# just think about it someday, yeah?)
+# now using only one model to simplify
+class Product(db.Model):
+    __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     publishing_year = db.Column(db.Integer)
     quantity_in_stock = db.Column(db.Integer)
-    description = db.Column(db.String(400))
+    # TODO make table for types
+    type_id = db.Column(db.Integer, db.ForeignKey('type.id'), nullable=False)
     publishing_house_id = db.Column(db.Integer, db.ForeignKey('publishing_house.id'), nullable=False)
-
-    # TODO: make using dict
-    def __init__(self, title, publishing_year, quantity_in_stock, description, publishing_house_id):
-        self.title = title
-        self.publishing_year = publishing_year
-        self.quantity_in_stock = quantity_in_stock
-        self.description = description
-        self.publishing_house_id = publishing_house_id
-
-    def to_json(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "publishing_year":  self.publishing_year,
-            "quantity_in_stock": self.quantity_in_stock,
-            "description": self.description,
-            "publishing_house": PublishingHouse.query.filter_by(id=self.publishing_house_id).first().name
-        }
-
-    # TODO: remove, just artefact from lesson or rewrite
-    def __repr__(self):
-        return '<Magazine %r>' % self.title
-
-
-book_author_association = db.Table('book_author_association', db.Model.metadata,
-                                   db.Column('author_id', db.Integer, db.ForeignKey('author.id')),
-                                   db.Column('book_id', db.Integer, db.ForeignKey('book.id'))
-                                   )
-
-
-class Book(db.Model):
-    __tablename__ = 'book'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120), nullable=False)
-    publishing_year = db.Column(db.Integer, nullable=False)
-    quantity_in_stock = db.Column(db.Integer, nullable=False)
-    description = db.Column(db.String(400))
     authors = relationship('Author', secondary=book_author_association, back_populates="books")
-    publishing_house_id = db.Column(db.Integer, db.ForeignKey('publishing_house.id'), nullable=False)
-
 
     # TODO: make using dict
-    def __init__(self, title, publishing_year, quantity_in_stock, description, publishing_house_id):
+    def __init__(self, title, publishing_year, quantity_in_stock, description, publishing_house_id, type_id):
         self.title = title
         self.publishing_year = publishing_year
         self.quantity_in_stock = quantity_in_stock
         self.description = description
         self.publishing_house_id = publishing_house_id
-
-    # TODO: remove, just artefact from lesson or rewrite
-    def __repr__(self):
-        return '<Magazine %r>' % self.title
+        self.type_id = type_id
 
     def to_json(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "publishing_year":  self.publishing_year,
-            "quantity_in_stock": self.quantity_in_stock,
-            "description": self.description,
-            "publishing_house": PublishingHouse.query.filter_by(id=self.publishing_house_id).first().name,
-            "authors": [author.name for author in Author.query.filter(Author.books.any(Book.id == self.id)).all()]
-        }
+        product_type = Type.query.filter_by(id=self.type_id).first()
+        if product_type is None:
+            return {"error": "something goes wrong with type"}
+        publishing_house = PublishingHouse.query.filter_by(id=self.publishing_house_id).first()
+        if publishing_house is None:
+            return {"error": "something goes wrong with publishing house"}
+        result = {"id": self.id,
+                  "type": product_type.name,
+                  "title": self.title,
+                  "publishing_year": self.publishing_year,
+                  "quantity_in_stock": self.quantity_in_stock,
+                  "description": self.description,
+                  "publishing_house": publishing_house.name,
+                  }
+        if product_type.name.eq("book"):
+            authors = [author.name for author in Author.query.filter(Author.books.any(Product.id == self.id)).all()]
+            if authors is None:
+                return {"error": "something goes wrong with publishing house"}
+            else:
+                result["authors"] = authors
+        return result
+
+    def __repr__(self):
+        return '<Product %r>' % self.title
 
 
 class Author(db.Model):
@@ -94,7 +115,7 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
     books = relationship(
-        "Book",
+        "Product",
         secondary=book_author_association,
         back_populates="authors")
 

@@ -11,14 +11,14 @@ def fill_db_with_data():
         if record == "publishing_houses":
             for pub_house in data[record]:
                 SaveDataHelper.new_publising_house(pub_house)
+        if record == "types":
+            for product_type in data[record]:
+                SaveDataHelper.new_type(product_type)
         if record == "authors":
             for author in data[record]:
                 SaveDataHelper.new_author(author)
-        if record == "magazines":
-            for magazine in data[record]:
-                SaveDataHelper.new_magazine(magazine)
-        if record == "books":
-            for book in data[record]:
-                SaveDataHelper.new_book(book)
+        if record == "products":
+            for product in data[record]:
+                SaveDataHelper.new_product(product)
     return data
 
