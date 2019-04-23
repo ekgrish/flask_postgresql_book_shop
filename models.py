@@ -75,11 +75,10 @@ class Product(db.Model):
     authors = relationship('Author', secondary=book_author_association, back_populates="books")
 
     # TODO: make using dict
-    def __init__(self, title, publishing_year, quantity_in_stock, description, publishing_house_id, type_id):
+    def __init__(self, title, publishing_year, quantity_in_stock, publishing_house_id, type_id):
         self.title = title
         self.publishing_year = publishing_year
         self.quantity_in_stock = quantity_in_stock
-        self.description = description
         self.publishing_house_id = publishing_house_id
         self.type_id = type_id
 
@@ -91,14 +90,13 @@ class Product(db.Model):
         if publishing_house is None:
             return {"error": "something goes wrong with publishing house"}
         result = {"id": self.id,
-                  "type": product_type.name,
+                  "type": product_type.product_type,
                   "title": self.title,
                   "publishing_year": self.publishing_year,
                   "quantity_in_stock": self.quantity_in_stock,
-                  "description": self.description,
                   "publishing_house": publishing_house.name,
                   }
-        if product_type.name.eq("book"):
+        if product_type.product_type == "книга":
             authors = [author.name for author in Author.query.filter(Author.books.any(Product.id == self.id)).all()]
             if authors is None:
                 return {"error": "something goes wrong with publishing house"}
