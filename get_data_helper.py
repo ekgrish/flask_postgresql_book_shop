@@ -1,7 +1,7 @@
 from urllib import parse
 from urllib.parse import urlparse
 from models import *
-from sqlalchemy import asc, desc, text
+from sqlalchemy import text
 
 
 class get_data_helper(object):
