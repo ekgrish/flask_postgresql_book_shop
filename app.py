@@ -9,8 +9,9 @@ db = SQLAlchemy(app)
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
 
 from handlers import *
+from get_data_helper import *
 
 

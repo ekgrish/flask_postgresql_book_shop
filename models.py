@@ -25,6 +25,9 @@ class Type(db.Model):
             product_type = Type.query.filter_by(product_type=self.product_type).first()
             return product_type.to_json(self)
 
+    def get_id_by_name(self, name):
+        return self.query.filter_by(name=name)
+
     def __repr__(self):
         return '<Type %r>' % self.product_type
 
@@ -51,6 +54,9 @@ class PublishingHouse(db.Model):
         else:
             publishing_house = PublishingHouse.query.filter_by(name=self.name).first()
             return publishing_house.to_json(self)
+
+    def get_id_by_name(self, name):
+        return self.query.filter_by(name=name)
 
     def __repr__(self):
         return '<PublishingHouse %r>' % self.name
