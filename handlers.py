@@ -62,11 +62,6 @@ def show_product(id):
 
 @app.route('/products', methods=['GET'])
 def show_products():
-    result = get_data_helper.parse_parametrs(request.url)
-    #filter = request.args.get('filter', default='*', type=str)
-    #value = request.args.get('value', default='*', type=str)
-    #order_by = request.args.get('order_by', default='*', type=str)
-    #reverse = request.args.get('reverse', default='False', type=str)
-
+    result = get_data_helper.get_data(request.url)
 
     return json.dumps(result)

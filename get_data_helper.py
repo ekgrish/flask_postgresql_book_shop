@@ -13,65 +13,87 @@ class get_data_helper(object):
         self.possible_parametrs_order_by = possible_parametrs_order_by
         self.possible_parametrs = possible_parametrs_order + possible_parametrs_order_by
 
-    def parse_parametrs(self, url):
-        parsed_params = parse.parse_qs(urlparse(url).query)
-        check_result = self.check_parametrs(parsed_params)
-        if check_result:
-            return check_result
 
-        formed_params = self.form_dict_for_query(parsed_params)
+    def get_data(self, url):
+
+        parsed_params = self.parse_params(url)
+        if parsed_params.get('error'):
+            return parsed_params
+
+        filter_params = parsed_params.get('filter')
+        order_params = parsed_params.get('order')
+
+        #TODO filter by author
         try:
-            kwargs = formed_params.get('filter')
-            products_query = Product.query.filter_by(**kwargs)
+            products_query = Product.query.filter_by(**filter_params)
         except Exception as e:
             return {"error": e}
 
-        if formed_params.get('order'):
-            if formed_params['order'].get('reverse'):
-                request_str = formed_params['order']['order_by'] + ' desc'
-            else:
-                request_str = formed_params['order']['order_by']
+        if order_params:
+            request_str = order_params['order_by']
+            if order_params.get('reverse'):
+                request_str = request_str + ' desc'
             products_query = products_query.order_by(text(request_str))
 
-        products_json = [product.to_json() for product in products_query.all()]
+        products = [product.to_json() for product in products_query.all()]
 
-        return products_json
+        return products
 
-    def check_parametrs(self, parsed_result):
+    def parse_params(self, url):
+        row_params = parse.parse_qs(urlparse(url).query)
+        check_result = self.check_params(row_params)
+        if check_result:
+            return check_result
+
+        parsed_params = self.form_dict_for_query(row_params)
+
+        return parsed_params
+
+    def check_params(self, parsed_result):
         possible_params_set = set(self.possible_parametrs)
         received_params_set = set(parsed_result.keys())
         if not (received_params_set.issubset(possible_params_set)):
             differ_params = received_params_set.difference(possible_params_set)
-            return {"error": "There Productare not possible params in request {}".format(differ_params)}
+            return {"error": "There are not possible params in request {}".format(differ_params)}
         else:
             if 'order_by' in parsed_result and parsed_result['order_by'] in self.possible_parametrs_order_by:
                 return {
                     "error": "There are not possible params in request.order_by {}".format(parsed_result['order_by'])}
 
         # TODO check corret availability and reverse
+        # TODO check if there are reverse, but there is no order_by
 
         return 0
 
-    def form_dict_for_query(self, parsed_result):
-        formed_result_filter = {}
-        formed_result_order = {}
-        if parsed_result.get('title'):
-            formed_result_filter['title'] = int(parsed_result['title'][0])
-        if parsed_result.get('publishing_year'):
-            formed_result_filter['publishing_year'] = int(parsed_result['publishing_year'][0])
-        if parsed_result.get('type'):
-            formed_result_filter['type_id'] = Type.query.filter_by(product_type=parsed_result['type'][0]).first().id
-        if parsed_result.get('publishing_house'):
-            formed_result_filter['publishing_house_id'] = PublishingHouse.query.filter_by(
-                name=parsed_result['publishing_house'][0]).first().id
-        #TODO for authors
+    def form_dict_for_query(self, row_params):
+        formed_result_filter = self.form_dict_for_filter(row_params)
+        formed_result_order = self.form_dict_for_order(row_params)
 
-        if parsed_result.get('order_by'):
-            formed_result_order['order_by'] = parsed_result['order_by'][0]
-        if parsed_result.get('reverse'):
-            formed_result_order['reverse'] = bool(parsed_result['reverse'][0])
-        # TODO: str to num
-        # TODO str to bool
         return {"filter": formed_result_filter, "order": formed_result_order}
+
+    def form_dict_for_filter(self, row_params):
+        formed_result_filter = {}
+        #TODO check if number value is not possible to convert
+        if row_params.get('title'):
+            formed_result_filter['title'] = int(row_params['title'][0])
+        if row_params.get('publishing_year'):
+            formed_result_filter['publishing_year'] = int(row_params['publishing_year'][0])
+        if row_params.get('type'):
+            formed_result_filter['type_id'] = Type.query.filter_by(product_type=row_params['type'][0]).first().id
+        if row_params.get('publishing_house'):
+            formed_result_filter['publishing_house_id'] = PublishingHouse.query.filter_by(
+                name=row_params['publishing_house'][0]).first().id
+        #TODO for authors
+        return formed_result_filter
+
+    def form_dict_for_order(self, row_params):
+        formed_result_order = {}
+        #TODO check if number value is not possible to convert
+        if row_params.get('order_by'):
+            formed_result_order['order_by'] = row_params['order_by'][0]
+        if row_params.get('reverse'):
+            formed_result_order['reverse'] = bool(row_params['reverse'][0])
+
+        return formed_result_order
 
 # ?type=книга&author=Несуществующий&publishing_house=Издательство&publishing_year=1994&availability=True&order_by=type&reverse=True
