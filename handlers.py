@@ -1,18 +1,19 @@
 import json
 
-from flask import make_response
-from flask import request, redirect, render_template, url_for, jsonify, abort
-from sqlalchemy import orm
+#from flask import make_response, abort
+from flask import request, redirect, render_template, url_for
+#from sqlalchemy import orm
 
 from app import app
 from models import *
 from get_data_helper import get_data_helper
+from post_data_helper import post_data_helper
 
 get_data_helper = get_data_helper()
-
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+post_data_helper = post_data_helper()
+# @app.errorhandler(404)
+# def not_found(error):
+#     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
 @app.route('/')
@@ -42,18 +43,17 @@ def magazine_actions():
 # TODO: error handler
 @app.route('/product/<int:id>', methods=['GET'])
 def show_product(id):
-    try:
-        product = Product.query.filter_by(id=id).first().to_json()
-    except orm.exc.NoResultFound:
-        abort(404)
-    except Exception as e:
-        pass
-        # abort(209)
+    product = Product.query.filter_by(id=id).first_or_404().to_json()
     return json.dumps(product)
 
+# /product/1?num=6
+@app.route('/product/<int:id>', methods=['POST'])
+def update_product(id):
+    result = post_data_helper.post_data(request.url, id)
 
+    return json.dumps(result)
 # /products?filter=type&value=книга
-# /products?filter=author&value=Несуществующий
+# /products?filter=author&value=Product.queryНесуществующий
 # /products?filter=publishing_house&value=Издательство
 # /products?filter=publishing_year&value=Издательство
 # /products?filter=availability&value=True
