@@ -2,6 +2,7 @@ from urllib import parse
 from urllib.parse import urlparse
 from models import *
 from sqlalchemy import text
+from app import logger
 
 
 class get_data_helper(object):
@@ -13,7 +14,6 @@ class get_data_helper(object):
         self.possible_parametrs_order_by = possible_parametrs_order_by
         self.possible_parametrs = possible_parametrs_order + possible_parametrs_order_by
 
-
     def get_data(self, url):
 
         parsed_params = self.parse_params(url)
@@ -23,7 +23,7 @@ class get_data_helper(object):
         filter_params = parsed_params.get('filter')
         order_params = parsed_params.get('order')
 
-        #TODO filter by author
+        # TODO filter by author
         try:
             products_query = Product.query.filter_by(**filter_params)
         except Exception as e:
@@ -43,6 +43,7 @@ class get_data_helper(object):
         row_params = parse.parse_qs(urlparse(url).query)
         check_result = self.check_params(row_params)
         if check_result:
+            logger.error(check_result.get('error'))
             return check_result
 
         parsed_params = self.form_dict_for_query(row_params)
@@ -73,7 +74,7 @@ class get_data_helper(object):
 
     def form_dict_for_filter(self, row_params):
         formed_result_filter = {}
-        #TODO check if number value is not possible to convert
+        # TODO check if number value is not possible to convert
         if row_params.get('title'):
             formed_result_filter['title'] = int(row_params['title'][0])
         if row_params.get('publishing_year'):
@@ -83,12 +84,13 @@ class get_data_helper(object):
         if row_params.get('publishing_house'):
             formed_result_filter['publishing_house_id'] = PublishingHouse.query.filter_by(
                 name=row_params['publishing_house'][0]).first().id
-        #TODO for authors
+        # TODO for authors
         return formed_result_filter
 
     def form_dict_for_order(self, row_params):
         formed_result_order = {}
-        #TODO check if number value is not possible to convert
+        # TODO check if number value is not possible to convert
+        # TODO: loggigng here
         if row_params.get('order_by'):
             formed_result_order['order_by'] = row_params['order_by'][0]
         if row_params.get('reverse'):
