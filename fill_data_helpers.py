@@ -23,7 +23,6 @@ class SaveDataHelper:
         product = Product(product_dict['title'],
                           product_dict['publishing_year'],
                           product_dict['quantity_in_stock'],
-                          product_dict['description'],
                           publising_house_id,
                           product_type_id)
         if product_type.product_type == "книга":
@@ -52,4 +51,9 @@ class SaveDataHelper:
     def new_type(type_dict):
         product_type = Type(type_dict['name'])
         db.session.add(product_type)
+        db.session.commit()
+
+    def new_user(user_dict):
+        user = User(user_dict['username'])
+        db.session.add(user)
         db.session.commit()

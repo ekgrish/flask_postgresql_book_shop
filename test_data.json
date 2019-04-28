@@ -111,5 +111,10 @@
       "description": "очень просто",
       "publishing_house_name": "Издательство"
     }
+  ],
+  "users": [
+    {
+      "username": "совсэм_одын"
+    }
   ]
 }

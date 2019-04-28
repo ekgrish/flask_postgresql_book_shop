@@ -20,5 +20,8 @@ def fill_db_with_data():
         if record == "products":
             for product in data[record]:
                 SaveDataHelper.new_product(product)
+        if record == "users":
+            for user in data[record]:
+                SaveDataHelper.new_user(user)
     return data
 
