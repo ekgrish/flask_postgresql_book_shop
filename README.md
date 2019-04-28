@@ -5,7 +5,7 @@ You need to create new db(postgreSQL) with following name or password:
 postgresql://postgres:123@localhost/book_shop  <br />
 name: book_shop  <br />
 pass: 123  <br />
-or just change app.config['SQLALCHEMY_DATABASE_URI'] in app.py to yours ones  <br />
+or just change app.config['SQLALCHEMY_DATABASE_URI'] in app.py to your ones  <br />
 
 to fill db: <br />
 from app import app <br />
