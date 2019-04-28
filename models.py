@@ -1,5 +1,7 @@
+from flask_login._compat import unicode
 from sqlalchemy.orm import relationship
-from app import db
+from app import db, serializer
+from flask_login import UserMixin
 
 
 class Type(db.Model):
@@ -61,10 +63,13 @@ class PublishingHouse(db.Model):
     def __repr__(self):
         return '<PublishingHouse %r>' % self.name
 
+
 book_author_association = db.Table('book_author_association', db.Model.metadata,
                                    db.Column('author_id', db.Integer, db.ForeignKey('author.id')),
                                    db.Column('book_id', db.Integer, db.ForeignKey('product.id'))
                                    )
+
+
 # TODO: make book and magazine inherited from maybe
 # one Table, but with two "handlers"
 # just think about it someday, yeah?)
@@ -80,7 +85,6 @@ class Product(db.Model):
     publishing_house_id = db.Column(db.Integer, db.ForeignKey('publishing_house.id'), nullable=False)
     authors = relationship('Author', secondary=book_author_association, back_populates="books")
 
-    # TODO: make using dict
     def __init__(self, title, publishing_year, quantity_in_stock, publishing_house_id, type_id):
         self.title = title
         self.publishing_year = publishing_year
@@ -123,10 +127,25 @@ class Author(db.Model):
         secondary=book_author_association,
         back_populates="authors")
 
-    # TODO: make using dict
     def __init__(self, name):
         self.name = name
 
-    # TODO: remove, just artefact from lesson or rewrite
     def __repr__(self):
         return '<Author %r>' % self.name
+
+
+class User(UserMixin, db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(30), unique=True)
+    session_token = db.Column(db.String(100), unique=True)
+
+    def __init__(self, username):
+        self.username = username
+        self.session_token = serializer.dumps([username])
+
+    def __repr__(self):
+        return '<User %r>' % self.username
+
+    def get_id(self):
+        return unicode(self.session_token)
