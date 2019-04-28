@@ -2,7 +2,7 @@ from models import *
 from app import db
 
 
-class SaveDataHelper:
+class saveDataHelper:
     def new_product(product_dict):
         publising_house = PublishingHouse.query.filter_by(name=product_dict['publishing_house_name']).first()
         if publising_house is None:

@@ -5,7 +5,7 @@ from sqlalchemy import text
 from app import logger
 
 
-class get_data_helper(object):
+class getDataHelper(object):
 
     def __init__(self, possible_parametrs_order=['order_by', 'reverse'],
                  possible_parametrs_order_by=['type', 'author', 'publishing_house',

@@ -1,4 +1,4 @@
-from fill_data_helpers import SaveDataHelper
+from fill_data_helpers import saveDataHelper
 import json
 
 
@@ -10,18 +10,18 @@ def fill_db_with_data():
     for record in data:
         if record == "publishing_houses":
             for pub_house in data[record]:
-                SaveDataHelper.new_publising_house(pub_house)
+                saveDataHelper.new_publising_house(pub_house)
         if record == "types":
             for product_type in data[record]:
-                SaveDataHelper.new_type(product_type)
+                saveDataHelper.new_type(product_type)
         if record == "authors":
             for author in data[record]:
-                SaveDataHelper.new_author(author)
+                saveDataHelper.new_author(author)
         if record == "products":
             for product in data[record]:
-                SaveDataHelper.new_product(product)
+                saveDataHelper.new_product(product)
         if record == "users":
             for user in data[record]:
-                SaveDataHelper.new_user(user)
+                saveDataHelper.new_user(user)
     return data
 

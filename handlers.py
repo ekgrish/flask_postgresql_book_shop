@@ -7,12 +7,12 @@ from flask_login import login_user, login_required, logout_user, current_user
 import logging
 from app import app, login_manager
 from models import *
-from get_data_helper import get_data_helper
+from get_data_helper import getDataHelper
 from post_data_helper import postDataHelper
 
 logger = logging.getLogger()
 
-get_data_helper = get_data_helper()
+get_data_helper = getDataHelper()
 post_data_helper = postDataHelper()
 # @app.errorhandler(404)
 # def not_found(error):
@@ -75,6 +75,6 @@ def update_product(product_id):
 @app.route('/products', methods=['GET'])
 @login_required
 def show_products():
-    result = get_data_helper.get_data(request.url)
+    result = getDataHelper.get_data(request.url)
     app.logger.info('Show products:successfully')
     return json.dumps(result)
