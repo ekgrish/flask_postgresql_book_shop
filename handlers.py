@@ -53,7 +53,7 @@ def logout():
 
 @login_manager.user_loader
 def load_user(session_token):
-    return User.query.filter_by(session_token).first()
+    return User.query.filter_by(session_token=session_token).first()
 
 # TODO: error handler
 @app.route('/product/<int:product_id>', methods=['GET'])
