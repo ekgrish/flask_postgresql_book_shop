@@ -1,0 +1,9 @@
+.idea/vcs.xml
+.idea/encodings.xml
+.idea/flask_postgresql_book_shop.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+__pycache__/
+pt_book_shop/
+logger.log
