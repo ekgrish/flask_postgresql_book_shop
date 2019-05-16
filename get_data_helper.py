@@ -5,14 +5,14 @@ from sqlalchemy import text
 from app import logger
 
 
-class getDataHelper(object):
+class GetDataHelper(object):
 
-    def __init__(self, possible_parametrs_order=['order_by', 'reverse'],
-                 possible_parametrs_order_by=['type', 'author', 'publishing_house',
+    def __init__(self, possible_params_order=['order_by', 'reverse'],
+                 possible_params_order_by=['type', 'author', 'publishing_house',
                                               'publishing_year', 'availability']):
-        self.possible_parametrs_order = possible_parametrs_order
-        self.possible_parametrs_order_by = possible_parametrs_order_by
-        self.possible_parametrs = possible_parametrs_order + possible_parametrs_order_by
+        self.possible_params_order = possible_params_order
+        self.possible_params_order_by = possible_params_order_by
+        self.possible_params = possible_params_order + possible_params_order_by
 
     def get_data(self, url):
 
@@ -51,13 +51,13 @@ class getDataHelper(object):
         return parsed_params
 
     def check_params(self, parsed_result):
-        possible_params_set = set(self.possible_parametrs)
+        possible_params_set = set(self.possible_params)
         received_params_set = set(parsed_result.keys())
         if not (received_params_set.issubset(possible_params_set)):
             differ_params = received_params_set.difference(possible_params_set)
             return {"error": "There are not possible params in request {}".format(differ_params)}
         else:
-            if 'order_by' in parsed_result and parsed_result['order_by'] in self.possible_parametrs_order_by:
+            if 'order_by' in parsed_result and parsed_result['order_by'] in self.possible_params_order_by:
                 return {
                     "error": "There are not possible params in request.order_by {}".format(parsed_result['order_by'])}
 

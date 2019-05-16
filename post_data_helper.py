@@ -2,10 +2,8 @@ from urllib import parse
 from urllib.parse import urlparse
 from models import *
 from app import logger
-from sqlalchemy import text
 
-
-class postDataHelper(object):
+class PostDataHelper(object):
 
     def __init__(self, possible_params=['num']):
         self.possible_params = possible_params
