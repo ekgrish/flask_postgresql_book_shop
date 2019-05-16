@@ -1,16 +1,16 @@
-from models import *
+from models import PublishingHouse, Product, Author, Type, User
 from app import db
 
 
-class saveDataHelper:
+class SaveDataHelper:
     def new_product(product_dict):
-        publising_house = PublishingHouse.query.filter_by(name=product_dict['publishing_house_name']).first()
-        if publising_house is None:
-            publising_house = PublishingHouse(product_dict['publishing_house_name'])
-            publising_house.save_data()
-            publising_house_id = PublishingHouse.query.filter_by(name=product_dict['publishing_house_name']).first().id
+        publishing_house = PublishingHouse.query.filter_by(name=product_dict['publishing_house_name']).first()
+        if publishing_house is None:
+            publishing_house = PublishingHouse(product_dict['publishing_house_name'])
+            publishing_house.save_data()
+            publishing_house_id = PublishingHouse.query.filter_by(name=product_dict['publishing_house_name']).first().id
         else:
-            publising_house_id = publising_house.id
+            publishing_house_id = publishing_house.id
 
         product_type = Type.query.filter_by(product_type=product_dict['type']).first()
         if product_type is None:
@@ -23,7 +23,7 @@ class saveDataHelper:
         product = Product(product_dict['title'],
                           product_dict['publishing_year'],
                           product_dict['quantity_in_stock'],
-                          publising_house_id,
+                          publishing_house_id,
                           product_type_id)
         if product_type.product_type == "книга":
             for author_name in product_dict['authors']:
